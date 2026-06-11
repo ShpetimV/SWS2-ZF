@@ -1,0 +1,193 @@
+% ============================================================
+%  Chapter fragment -- included by main.tex
+%  (not a standalone document; compile main.tex to build the PDF)
+% ============================================================
+\begin{multicols*}{3}
+\raggedcolumns
+
+\sheettitle{01b -- Securing Information Systems}{SWS2 -- Overview / ZHAW / Tellenbach}
+
+% ==================== CHAPTER 1: SECURING IS ====================
+\section{Securing Information Systems}
+
+\subsection{Information System (ISO 27000)}
+Set of applications, services, IT assets \& info-handling components. Involves:
+\begin{itemize}
+\item \kw{Methods \& procedures}
+\item \kw{Data}
+\item \kw{Technology} (software/hardware)
+\item \kw{People}
+\end{itemize}
+
+\subsection{Two fundamental questions}
+\begin{itemize}
+\item How to \kw{manage security} so the system stays secure?
+\item How do we \kw{know} we are secure? (measuring)
+\end{itemize}
+
+\subsection{ISMS (Info Sec Mgmt System)}
+\begin{itemize}
+\item \kw{Systematic approach} to managing info so it stays secure.
+\item Covers people, processes, IT via a \kw{risk management process}.
+\item Risk kept at an \kw{acceptable level} through a coherent set of \kw{security controls}.
+\item Examples: \term{ISO 27000-series, NIST RMF, BSI IT-Grundschutz, CIS Controls}.
+\end{itemize}
+
+\subsection{Security Controls}
+Safeguards/countermeasures to \kw{avoid, detect, counteract, minimize} risks to assets.
+Characterized by \kw{attributes}:
+\begin{itemize}
+\item \kw{Info-sec property}: Confidentiality, Integrity, Availability (CIA)
+\item \kw{Category}: people, physical, technology, organizational
+\item \kw{Function}: identify, protect, detect, respond, recover
+\end{itemize}
+
+\subsection{Type of a Control \hl{(!)}}
+\begin{itemize}
+\item \kw{Preventive}: prevent incident (auth, firewall)
+\item \kw{Detective}: identify incident in progress (alarm, IDS)
+\item \kw{Corrective}: limit damage / recover (backup, redundancy)
+\end{itemize}
+
+\subsection{Controls in ISMS -- Abstraction}
+\begin{itemize}
+\item ISMS operate at \kw{high abstraction} (apply to all orgs/sectors).
+\item Different granularity; sector-specific control sets exist.
+\item Little guidance on \kw{technical} implementation.
+\end{itemize}
+
+\subsection{Example: ISO 27000 ("27k")}
+\begin{itemize}
+\item \kw{ISO 27001:2022}: 93 controls in Annex A (For Example): Network Security: "Networks and network devices should be secured, managed and controlled to protect information in systems and applications." So it says what to do, but not how to do it.
+\item \kw{ISO 27002:2022}: adds \kw{implementation guidance} -- control objectives \& best-practice controls.
+\item Not all controls relevant to every org; industry extensions exist (e.g. telco ISO 27011).
+\end{itemize}
+ISO 27002 control documents have: \term{Control, Purpose, Guidance} + attribute table.
+
+\subsection{Ex: Control "Protection against malware"}
+ISO 27002:2022 tags each control with 5 \kw{attributes}; possible values per attribute below, \hl{highlighted = the ones that apply} for this control:
+\begin{itemize}
+\item \kw{Control type}: Preventive / \hl{Detective} / Corrective
+\item \kw{Info security properties}: Confidentiality / \hl{Integrity} / Availability
+\item \kw{Cybersecurity concepts}: Protect / \hl{Detect}
+\item \kw{Operational capabilities}: System\_and\_network\_security / Information\_protection
+\item \kw{Security domains}: Protection / \hl{Defence}
+\end{itemize}
+
+\subsection{Implementing an ISMS}
+\begin{itemize}
+\item Task for \kw{management} -- usually the \kw{CISO} (talks to board in business/risk terms).
+\item Gives the \kw{big picture}; standards act as a \kw{checklist}.
+\item \kw{Certification}: checks whether company implements a standard.
+\item Complex, costly; \hl{no guidance to efficiently prioritize} vs most common threats $\Rightarrow$ \kw{CIS Controls}.
+\end{itemize}
+
+% ==================== CHAPTER: CIS CONTROLS ====================
+\section{CIS Critical Security Controls}
+
+\subsection{Overview}
+Is a list of the most important security measures to defend against real cyber-attacks
+
+In comparison to ISO 27000, ISO is high-level and says "what" to do, but not "how" to do it. CIS Controls are more specific and actionable, with detailed implementation guidance.
+\begin{itemize}
+\item Best-practice guidelines, started \kw{2008} (US defense breaches).
+\item \kw{18 controls} for current cyber attacks; by experts.
+\end{itemize}
+\textbf{Guiding principles:}
+\begin{itemize}
+\item Only \kw{critical} controls, based on \kw{attacker behavior} \& data.
+\item \kw{Prioritize as a community}; immediate action $>$ completeness.
+\item Provide info on how to implement \& \kw{automate}.
+\end{itemize}
+
+\subsection{The 18 Controls}
+{\scriptsize
+01 Inventory Enterprise Assets \textbullet{} 02 Inventory Software Assets \textbullet{} 03 Data Protection \textbullet{} 04 Secure Config \textbullet{} 05 Account Mgmt \textbullet{} 06 Access Control Mgmt \textbullet{} 07 Continuous Vuln Mgmt \textbullet{} 08 Audit Log Mgmt \textbullet{} 09 Email \& Web Browser \textbullet{} 10 Malware Defenses \textbullet{} 11 Data Recovery \textbullet{} 12 Network Infra Mgmt \textbullet{} 13 Network Monitoring \& Defense \textbullet{} 14 Security Awareness \& Training \textbullet{} 15 Service Provider Mgmt \textbullet{} 16 Application Software Sec \textbullet{} 17 Incident Response Mgmt \textbullet{} 18 Penetration Testing
+}
+
+\subsection{Safeguards}
+\kw{Safeguards} = concrete things to implement (called sub-controls before v8). Each control has N safeguards split across IG1/IG2/IG3.
+
+\subsection{CIS Control content}
+\begin{itemize}
+\item \kw{Overview}: purpose \& defensive use
+\item \kw{Why important}: how attackers exploit absence
+\item \kw{Processes \& tools}: technical impl./automation
+\item \kw{Safeguards}: table of specific measures
+\end{itemize}
+
+\subsection{Prioritization \hl{(!)}}
+\begin{itemize}
+\item \kw{Until v7.1}: controls 1--6 = "cyber hygiene" first. Criticized as too simplistic.
+\item \kw{Since v8}: prioritization via \kw{Implementation Groups IG1--IG3}. Control order still has value (e.g. 1\&2 protect vs malware better than 10).
+\item In practice: baseline + \hl{risk assessment} (cost-benefit per environment).
+\end{itemize}
+
+\subsection{Implementation Groups (IG)}
+\begin{itemize}
+\item \kw{IG1 -- Basic Cyber Hygiene}: limited expertise, COTS, small biz/home; thwarts \kw{general, non-targeted} attacks. Stop here if SME, low-sensitivity data, focus on operations.
+\item \kw{IG2} (incl IG1): copes with operational complexity; enterprise-grade tech \& expertise; multiple depts, compliance, sensitive data, public trust.
+\item \kw{IG3} (incl IG1+IG2): security experts; vs \kw{targeted attacks}, reduce impact of \kw{zero-days}; regulated, availability+CIA at heart of business.
+\end{itemize}
+
+\subsection{Safeguards per IG -- "x/N" notation \hl{(!)}}
+Each control has N safeguards; IGs are \kw{cumulative} (IG2$\supseteq$IG1, IG3$\supseteq$IG2). "\kw{x/N}" = how many of the N safeguards apply at that level.
+\textit{Ex: Control 09 Email \& Web Browser (7 safeguards)} $\to$ IG1 \hl{2/7}, IG2 6/7, IG3 7/7:
+\begin{itemize}
+\item \kw{IG1 (2/7)}: only supported browsers/mail clients + DNS filtering (cheap, high-impact).
+\item \kw{IG2 (6/7)}: + URL filters, restrict extensions, DMARC, block file types.
+\item \kw{IG3 (7/7)}: + email-server anti-malware.
+\end{itemize}
+\kw{IG1 = 0/N} (e.g. 13 Net Monitoring 0/11, 18 PenTest 0/5) $\Rightarrow$ basic-hygiene org does \kw{nothing} in that control yet.
+
+\subsection{Selected Controls (detail)}
+\begin{itemize}
+\item \kw{CSC 1 -- Enterprise Assets}: active+passive device discovery, asset inventory DB, NLA (802.1x), PKI, analytics. \term{Why both active+passive?} active=fast/triggers, passive=continuous/finds hidden \& unauth devices.
+\item \kw{CSC 2 -- Software Assets}: software whitelisting, inventory tool, NAC to \kw{enforce}. Very effective vs malware (blocks unauthorized SW).
+\item \kw{CSC 7 -- Continuous Vuln Mgmt}: SCAP vuln scanner + patch mgmt + analytics.
+\end{itemize}
+
+\subsection{Summary \& Criticism}
+\begin{itemize}
+\item Most companies implement only a \kw{subset}.
+\item Protecting IS is complex: needs checklists, resources, risk mgmt.
+\item Critique: paper "A Critical View on CIS Controls" (S. Gros) -- some valid, some academic.
+\end{itemize}
+
+% ==================== CHAPTER: MEASURING SECURITY ====================
+\section{Measuring Security of IS}
+
+\subsection{How secure is your org?}
+Factors (incomplete): \kw{people, physical security, vulnerabilities (known+unknown), controls, configuration \& architecture, processes \& policies}.
+\hl{Measuring security scientifically/holistically is (most likely) not possible.} Same for measuring \kw{risk}.
+
+\subsection{Approaches to measure}
+\begin{itemize}
+\item \kw{Security}: \kw{Audit} (systematic eval vs established criteria), \kw{penetration test}, measures of ISMS performance \& effectiveness.
+\item \kw{Risk}: \kw{Risk = Likelihood $\times$ Impact}; estimating likelihood is very hard.
+\end{itemize}
+
+\subsection{Why measure at all?}
+\begin{itemize}
+\item Identify controls \kw{implemented incorrectly / ineffective / missing}.
+\item \kw{Quantify progress} (e.g. time to fix vuln, phishing resilience).
+\item \kw{Compliance} evidence (ISO 27001 requires eval of performance \& effectiveness).
+\item Support \kw{risk-informed decisions}.
+\end{itemize}
+
+\subsection{Measure frameworks}
+\kw{NIST SP 800-55} \& \kw{ISO 27004} provide measure templates (Goal, Measure, Formula, Target, Frequency, Responsible parties, Data source, Reporting format). E.g. \% of high vulns mitigated within defined time; trend of detected-but-not-blocked malware attacks.
+
+\subsection{Recommendations}
+\begin{itemize}
+\item Measuring whole infrastructure safety hardly possible, but we must measure to \kw{decide} $\Rightarrow$ aim: \kw{reduce uncertainty}.
+\item \kw{Question} what/how is measured \& what conclusions (e.g. "2$\times$ failed SSH logins" $\neq$ 2$\times$ exposure).
+\item Use \kw{comparative measurements} (IDS subnet $>$ no IDS; static analysis $\to$ more secure).
+\item Measure \kw{progress \& maturity} with best-practice measures.
+\end{itemize}
+
+\begin{defbox}
+\textbf{Take-away:} Securing information systems is hard. Measuring security is hard.
+\end{defbox}
+
+\end{multicols*}

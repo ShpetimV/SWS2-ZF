@@ -1,0 +1,69 @@
+% ============================================================
+%  Shared style for SWS2 cheatsheets
+%  Used by the per-topic .tex files (01_..., 02_..., ...)
+% ============================================================
+\ProvidesPackage{cheatsheet-style}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper,landscape,margin=0.7cm]{geometry}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage{amssymb}
+\usepackage{microtype}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{colortbl}
+
+% ===== Colors (ZHAW-ish blue) =====
+\definecolor{zhawblue}{RGB}{0,90,158}
+\definecolor{secblue}{RGB}{30,110,180}
+\definecolor{lightgray}{RGB}{240,240,240}
+\definecolor{accent}{RGB}{200,30,30}
+\definecolor{tableblue}{RGB}{214,232,247}   % light blue for table rows
+
+% ===== Layout tweaks =====
+\setlength{\columnsep}{0.6em}
+\setlength{\columnseprule}{0.3pt}
+\setlength{\parindent}{0pt}
+\linespread{0.94}
+
+% Don't stretch vertical space to fill the page bottom: pack content
+% from the top and leave the bottom ragged. This stops the "dragging
+% down" effect when a chapter spills onto a second page, so each new
+% page starts fresh columns at the top.
+\raggedbottom
+
+% ===== Section styling (compact blue bar) =====
+\newcommand{\secbar}[1]{%
+  \par\smallskip
+  \noindent\colorbox{zhawblue}{\parbox{\dimexpr\columnwidth-2\fboxsep\relax}{\color{white}\bfseries\strut #1}}%
+  \par\smallskip}
+\titleformat{\section}{}{}{0pt}{\secbar}
+\titlespacing{\section}{0pt}{4pt}{2pt}
+
+\titleformat{\subsection}{\normalfont\bfseries\color{secblue}}{}{0pt}{}
+\titlespacing{\subsection}{0pt}{3pt}{1pt}
+
+% ===== Compact lists =====
+\setlist[itemize]{leftmargin=1.1em,topsep=0pt,partopsep=0pt,parsep=0pt,itemsep=0.4pt,label=\textcolor{zhawblue}{\tiny$\blacksquare$}}
+\setlist[itemize,2]{leftmargin=0.9em,label=\textcolor{secblue}{\tiny$\bullet$},itemsep=0.2pt}
+
+% ===== Helper macros =====
+\newcommand{\kw}[1]{\textbf{\color{zhawblue}#1}}   % key term
+\newcommand{\term}[1]{\textit{#1}}                  % example / italic term
+\newcommand{\hl}[1]{\textbf{\color{accent}#1}}      % exam-relevant marker
+
+\newtcolorbox{defbox}{colback=lightgray,colframe=zhawblue,boxrule=0.4pt,arc=2pt,left=2pt,right=2pt,top=1pt,bottom=1pt,boxsep=1pt}
+
+% ===== Title helper =====
+\newcommand{\sheettitle}[2]{%
+  {\color{zhawblue}\Large\bfseries #1}\\
+  {\footnotesize #2}\par}
+
+\pagestyle{empty}

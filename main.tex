@@ -1,0 +1,33 @@
+% ============================================================
+%  SWS2 -- Securing Information Systems : Combined Cheatsheet
+%
+%  Build:   pdflatex main.tex   ->  main.pdf  (all chapters)
+%
+%  Each chapter lives in its own .tex fragment and is included
+%  below. To add a new deck: create NN_topic.tex (copy an
+%  existing one) and add an \input line + \clearpage here.
+% ============================================================
+\documentclass[8pt,landscape,a4paper]{extarticle}
+\usepackage{cheatsheet-style}
+
+\begin{document}
+
+\input{01_securing_information_systems.tex}
+\clearpage
+\input{02_threat_landscape.tex}
+\clearpage
+\input{03_security_controls_siem.tex}
+\clearpage
+\input{04_pentesting_1.tex}
+\clearpage
+\input{05_pentesting_2.tex}
+\clearpage
+\input{06_pentesting_3.tex}
+% \clearpage
+% \input{07_exploitation.tex}   % skipped for now -- to be done later
+\clearpage
+\input{08_malware_1.tex}
+\clearpage
+\input{09_malware_2.tex}
+
+\end{document}
