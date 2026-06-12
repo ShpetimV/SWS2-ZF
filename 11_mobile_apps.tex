@@ -1,0 +1,180 @@
+% ============================================================
+%  Chapter fragment -- included by main.tex
+%  (not a standalone document; compile main.tex to build the PDF)
+% ============================================================
+\begin{multicols*}{3}
+\raggedcolumns
+
+\sheettitle{11 -- Mobile Apps Security}{SWS2 -- ZHAW / Tellenbach}
+
+% ==================== INTRO ====================
+\section{Intro -- OWASP Mobile Top 10 \hl{(!)}}
+Devs make the same security mistakes as in any app. Web has \kw{OWASP Top 10}; mobile has the \kw{OWASP Mobile Top 10} (M1--M10: improper platform usage, insecure data storage, insecure comm, insecure auth, insufficient crypto, insecure authz, client code quality, code tampering, reverse engineering, extraneous functionality).\\
+It's \kw{less mature} (redundant categories) $\Rightarrow$ this chapter uses an \kw{adapted version}, \kw{6 categories}:
+\begin{itemize}
+\item \kw{Data Storage \& Leakage}, \kw{Secure Communication}, \kw{Auth \& Authorization}, \kw{Inter-App Communication}, \kw{Client-Side Injection}, \kw{Reverse Engineering}.
+\end{itemize}
+\textit{For each: what can go wrong + best practices.} \hl{Recurring theme: any in-app security measure can be circumvented by a determined attacker (esp. with root).}
+
+% ============================================================
+%  1. DATA STORAGE & LEAKAGE
+% ============================================================
+\section{1. Data Storage \& Leakage \hl{(!)}}
+Storing sensitive data securely + preventing leakage. Leak channels: \kw{file system}, \kw{copy/paste buffer}, \kw{screenshots}, \kw{system log}, \kw{3rd-party} (analytics).
+\subsection{Where to store data (3 options)}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\arrayrulecolor{zhawblue}
+\noindent\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.65\linewidth}@{}}
+\rowcolor{zhawblue}
+{\color{white}\bfseries Option} & {\color{white}\bfseries Notes}\\
+\rowcolor{tableblue}
+\kw{App-specific area} & \term{Documents} (iOS) / \term{shared\_prefs} (Android). Sandbox protects it; \hl{but root / jailbreak / backups expose it}.\\
+\rowcolor{white}
+\kw{Secure store} & iOS \kw{Keychain}/\kw{Secure Enclave}, Android \kw{Keystore}. Not in unencrypted backups; \hl{root still gets content}. Enclave best but \kw{public-key only}.\\
+\rowcolor{tableblue}
+\kw{Shared place} & Android \kw{MediaStore} / \term{/sdcard} (unprotected). \hl{Bad} unless data is meant to be shared.\\
+\end{tabular}}
+\textit{Android example: SharedPreferences write \term{user}/\term{password} into \term{...\_preferences.xml} -- other apps blocked by sandbox, but \kw{root} reads it \& it's in backups.}
+
+\subsection{Storing sensitive data -- best practice \hl{(!)}}
+\kw{Paranoid view} (\hl{store nothing sensitive, never store credentials}) is \kw{unrealistic}: users want \kw{convenience}, and \hl{forcing re-entry $\Rightarrow$ users pick weaker passwords}. So \kw{balance usability vs security}:
+\begin{itemize}
+\item \hl{Don't let users store passwords for highly critical services} (e-banking, crypto wallets, password managers).
+\item For most apps it's \kw{reasonable} to store credentials in the \kw{app-specific FS} (sandbox makes access hard); use the \kw{Keychain/Keystore}; \kw{not} on \term{/sdcard}.
+\item Extra encryption: \kw{hardcoded secret} $\to$ \hl{useless vs reverse engineering}; \kw{user-supplied secret at startup} $\to$ secure but \kw{not user-friendly}.
+\end{itemize}
+\kw{Be aware of the risks}: root malware reads all; \kw{unencrypted backups}; jailbreak/root raises risk; \hl{lending the phone} -- they use stored creds, or even \kw{root $\to$ extract creds $\to$ unroot} in minutes.
+
+\subsection{Leakage channels}
+\begin{itemize}
+\item \kw{Copy/paste}: clipboard is \kw{global} (all apps read it) $\Rightarrow$ a Trojan reads copied \kw{passwords} (e.g. from a password manager). \term{Facebook app read clipboard to "offer" posting a copied link.}
+\item \kw{Screenshots} -- \kw{by user}: stored in photo library, readable by apps with permission $\Rightarrow$ login/credit-card screen leaks. \kw{By OS}: snapshot when app \kw{backgrounded} (for app switcher) -- not app-readable but \kw{sits in FS}.
+\item \kw{Logs}: any app can write; not app-readable but reachable via \kw{Xcode/adb}, root, jailbreak. \term{Banking app logged credentials -- forgot to disable for release.}
+\end{itemize}
+\subsection{Preventing leakage -- best practice}
+\kw{Disable copy} on sensitive fields (both OS, programmatic); \kw{prevent OS screenshot} $\to$ blank image (both OS); \kw{block user screenshots} (\hl{Android only, impossible on iOS}); \kw{never log sensitive data} (turn off dev logging); \kw{check 3rd-party libs} (logging/analytics).
+
+% ============================================================
+%  2. SECURE COMMUNICATION
+% ============================================================
+\section{2. Secure Communication \hl{(!)}}
+Apps talk to backends over \kw{HTTP} $\Rightarrow$ secure with \kw{TLS (HTTPS)}.
+\begin{itemize}
+\item \kw{Android 9+}: HTTPS \kw{enforced} (HTTP needs explicit opt-in). \kw{iOS}: HTTP needs exceptions in \kw{Info.plist} (since Jan 2017).
+\item TLS is \kw{easy} -- supported by all languages/platforms.
+\end{itemize}
+\subsection{TLS best practices}
+\kw{Disable insecure versions} (SSL, TLS 1.0) \& \kw{weak ciphers} (DES, RC4, MD5) -- usually \kw{secure by default} on recent runtimes. Use \kw{certs from established CAs}. \hl{Don't allow the user to override a failed cert check} (a failure may signal an attack).
+\subsection{The CA problem $\to$ Certificate Pinning \hl{(!)}}
+OS has a \kw{trust store} of many CAs. \hl{An attacker only needs ONE vulnerable CA} to get a valid cert for your server $\Rightarrow$ impersonation / \kw{MITM}. Since a mobile app talks to \kw{known servers only}, it can \kw{pin}:
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\arrayrulecolor{zhawblue}
+\noindent\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}@{}}
+\rowcolor{zhawblue}
+{\color{white}\bfseries Pin} & {\color{white}\bfseries Attacker must} & {\color{white}\bfseries Trade-off}\\
+\rowcolor{tableblue}
+\kw{CA cert} & get a fraudulent cert \kw{from the same CA} & survives server cert renewal; \kw{update app if CA changes} (rare)\\
+\rowcolor{white}
+\kw{Server cert} & get the \kw{server's private key} (or same-hash cert) & \kw{strongest}; \kw{update app on every cert change} (Let's Encrypt = 90d!)\\
+\rowcolor{tableblue}
+\kw{Own check} & self-signed server cert pinned in code & \kw{full control}, no external CA; rely on nothing external\\
+\end{tabular}}
+\textit{Pinning = hardcode the cert (or its hash) in the app, compare after TLS handshake.}
+
+% ============================================================
+%  3. AUTH & AUTHORIZATION
+% ============================================================
+\section{3. Authentication \& Authorization \hl{(!)}}
+\begin{defbox}
+\hl{Classic flaw:} app hides a screen behind login, but the \kw{video/data request to the server carries NO auth/authz} $\Rightarrow$ attacker requests files directly = free access. \kw{Hiding a UI screen $\ne$ protecting the function.} Cause: weak backend access control + believing UI = security.
+\end{defbox}
+\subsection{Weak auth on mobile}
+Apps often \kw{relax} auth for convenience: \kw{shorter/weaker passwords}, \kw{2nd factor used less}. $\Rightarrow$ easier identity theft (guessing, offline cracking). \hl{Best practice: use the SAME auth strength as web}; require equally strong passwords \& \kw{store them} for usability (except highly sensitive, e.g. e-banking).
+\subsection{Offline auth \& authz \hl{(!)}}
+App checks credentials \kw{locally, no server} (e.g. game unlock code). \hl{Generally impossible to do securely} because the \kw{attacker has the whole app}:
+\begin{itemize}
+\item Content + check-logic + key must all be \kw{in the app}.
+\item E.g. \kw{AC = HMAC\textsubscript{key}(username)}: attacker \kw{extracts the key} (make valid codes) \kw{OR} \kw{binary-patches} the check to always pass.
+\item Anti-RE \kw{slows} but won't stop a committed attacker.
+\end{itemize}
+\subsection{Best practice}
+\kw{Server-side access control}: after login, server issues an \kw{access token} sent on \kw{every request}; server checks identity + permission. \hl{Don't use offline auth/authz} unless the protected value is low. Don't allow weaker passwords; use a \kw{2nd factor} even if weaker than on a PC.
+\subsection{2nd-factor options (vs mTAN)}
+\kw{mTAN} = login code via SMS. Alternatives:
+\begin{itemize}
+\item \kw{Shared secret} app$\leftrightarrow$server (cheap): secret stored at registration, sent with login, server rotates it each login.
+\item \kw{Separate authenticator app}: server sends a \kw{challenge} only the personalized auth app can solve (via inter-app comm, user confirms) $\to$ response forwarded to server.
+\item \hl{Security of all $\approx$ mTAN}: to get the 2nd factor the attacker needs \kw{device access} (physical / malware) -- same as grabbing mTAN codes.
+\end{itemize}
+
+% ============================================================
+%  4. INTER-APP COMMUNICATION
+% ============================================================
+\section{4. Inter-App Communication \hl{(!)}}
+Both OS support it: \kw{URL schemes} (\term{zhaw://...}); Android also \kw{explicit Activity calls (intents)}. Main risks:
+\begin{itemize}
+\item Receiver \kw{processes data without validating} it (see client-side injection).
+\item App \hl{exposes comm "accidentally"} $\to$ \kw{unlikely on iOS} (needs handling code) but \hl{likely on Android} (just a little \term{AndroidManifest.xml} config, no code).
+\item \kw{Malicious app hijacks} the channel -- critical if sensitive data flows.
+\end{itemize}
+\subsection{Android specifics}
+A component (Activity/Service/ContentProvider) is callable by other apps if:
+\begin{itemize}
+\item \kw{android:exported="true"} $\to$ callable by \kw{explicit intent} (package/class name, e.g. \term{...PostLogin}), \kw{OR}
+\item it has an \kw{intent-filter} (defines URL scheme/action, e.g. \term{...VIEW\_CREDS}) $\to$ callable by \kw{implicit intent}.
+\end{itemize}
+\begin{defbox}
+\hl{InsecureBank example:} a \kw{copy-paste mistake} marked the \kw{post-login} Activity \term{exported="true"} $\Rightarrow$ other apps / a user via \kw{adb} call it \kw{directly}, \kw{skipping login} = access to authenticated-only functions.
+\end{defbox}
+\subsection{Best practice}
+\kw{Always validate} received data. Only set \kw{intent-filter / exported=true} if you really want the component public. \kw{Sensitive data}: a malicious app can register the \kw{same URL scheme} -- Android shows an \kw{app-chooser}, \hl{iOS gives it to the first registrant (since iOS 11)}; use \kw{explicit intents} to avoid the pop-up, and \kw{check the caller's identity} (App ID / package).
+
+% ============================================================
+%  5. CLIENT-SIDE INJECTION
+% ============================================================
+\section{5. Client-Side Injection \hl{(!)}}
+Like server-side injection (SQLi, OS/XML) \kw{but inside the app, on the device}. Triggered \kw{by the user} or \kw{by another app} (inter-app). Two examples:
+\subsection{Local SQL injection}
+Apps use local \kw{SQLite} DBs. If the user controls part of a query $\to$ \kw{adapt its semantics}:
+\begin{itemize}
+\item \kw{Bypass local login}: \term{' OR 1=1 --}
+\item \kw{Dump the DB}: \term{' or 1=1 --} in a search $\to$ returns all rows (all users, passwords, credit cards).
+\end{itemize}
+\hl{Risk usually smaller than server-side}: local DB often holds data \kw{the user already knows} \& is reachable anyway (adb). \kw{But} a threat when: used for \kw{local authentication} (lent phone), or the app \kw{accepts queries from other apps} (e.g. a health app) $\to$ another app uses SQLi to read \kw{arbitrary data}.
+\subsection{Local File Inclusion}
+App opens a file by a \kw{user-supplied name}; no validation $\Rightarrow$ \kw{path traversal} (\term{../shared\_prefs/...\_preferences.xml}) reads files outside the intended folder. Also via \kw{URLs}: app fetches a user URL, no validation $\to$ attacker uses a \kw{file://} URL (e.g. \term{file:///data/data/.../shared\_prefs/...}) to read local files. \hl{Mainly critical with inter-app communication} (normal user is sandbox-limited anyway).
+\subsection{Best practice}
+Same as server-side: \kw{prepared statements} (not string concatenation) for SQL; \kw{input validation} via \kw{whitelisting} (e.g. username = $\le$10 lowercase chars; filename = $\le$20 letters + one dot); for URLs \kw{accept only expected schemes} (http/https, \hl{not file}).
+
+% ============================================================
+%  6. REVERSE ENGINEERING
+% ============================================================
+\section{6. Reverse Engineering \hl{(!)}}
+Goal: understand internals + \kw{extract hidden info}. Attacker motivation: find \kw{hardcoded secrets/keys}, \kw{hidden functionality}, \kw{locate \& defeat security functions} (offline access control), steal \kw{IP/algorithms}, clone the app (Trojan).
+\subsection{Attacker's toolkit}
+\begin{itemize}
+\item \kw{strings} -- dump printable strings from a binary $\to$ spot passwords/URLs/commands (\term{olsdfgad;lh} "smells like a password").
+\item \kw{Static analysis}: decompilers/disassemblers (Android Studio, JD-GUI, Hopper, IDA-Pro).
+\item \kw{Dynamic analysis}: debuggers (gdb, jdb) -- watch runtime behaviour.
+\item Then \kw{manipulate}: \kw{binary-patch} access control or jailbreak/root-detection to a \kw{no-op}; hook methods at runtime (\kw{cycript}/iOS, \kw{Frida}/Android).
+\end{itemize}
+\subsection{Best practice \hl{(!)}}
+\hl{Disclaimer: anti-RE only slows the attacker, never stops a determined one.}
+\begin{itemize}
+\item \kw{Hardcoded secrets}: OK to \kw{encrypt local files "a bit"}; \hl{NOK to protect server admin functions} -- they'll be found.
+\item \kw{Code obfuscation} (for valuable apps): harder to decompile. \hl{Esp. needed on Android} (Dalvik bytecode decompiles easily); ObjC/Swift harder (compiler optimization). Tools: \kw{ProGuard/DexGuard} (Android), \kw{iXGuard/PreEmptive} (iOS).
+\item \kw{Anti-debugging}: iOS \term{SEC\_IS\_BEING\_DEBUGGED\_RETURN\_NIL()}, Android \term{Debug.isDebuggerConnected()} (gdb attach $\to$ segfault). Removable by \kw{binary patching}.
+\item \kw{Jailbreak/root detection}: check for typical files (\term{/Applications/Cydia.app}, \term{/system/app/Superuser.apk}) $\Rightarrow$ raises the bar. \hl{But circumvented} by binary patching or hooking tools (\kw{Liberty Lite}/iOS, \kw{RootCloak}/Android) that fake a "clean" response.
+\end{itemize}
+
+% ==================== SUMMARY ====================
+\section{Summary \hl{(!)}}
+\begin{defbox}
+Mobile-app flaws split in two: \kw{web-like} (secure comm, auth/authz, client-side injection -- fix as in web: TLS+pinning, server-side access control + tokens, prepared statements + whitelisting) and \kw{app-specific} (data storage/leakage, inter-app comm, reverse engineering). \hl{Golden rule: any in-app security measure can be circumvented by a determined attacker} -- offline auth, hardcoded-key encryption, and anti-RE only \kw{slow} attacks. $\Rightarrow$ keep secrets \& access control \kw{server-side}.
+\end{defbox}
+
+\end{multicols*}
