@@ -3,31 +3,43 @@
 %
 %  Build:   pdflatex main.tex   ->  main.pdf  (all chapters)
 %
-%  Each chapter lives in its own .tex fragment and is included
-%  below. To add a new deck: create NN_topic.tex (copy an
-%  existing one) and add an \input line + \clearpage here.
+%  All chapters share ONE continuous 3-column stream (the
+%  multicols* wrapper lives here, once) so content packs
+%  densely across pages with no blank / half-empty pages.
+%  Each chapter fragment is content only -- its \sheettitle
+%  acts as the divider.
+%
+%  To add a deck: create NN_topic.tex (content only, NO
+%  multicols wrapper) and add an \input line below.
 % ============================================================
 \documentclass[8pt,landscape,a4paper]{extarticle}
 \usepackage{cheatsheet-style}
 
 \begin{document}
+\begin{multicols*}{3}
+\raggedcolumns
 
 \input{01_securing_information_systems.tex}
-\clearpage
+\chapsep
 \input{02_threat_landscape.tex}
-\clearpage
+\chapsep
 \input{03_security_controls_siem.tex}
-\clearpage
+\chapsep
 \input{04_pentesting_1.tex}
-\clearpage
+\chapsep
 \input{05_pentesting_2.tex}
-\clearpage
+\chapsep
 \input{06_pentesting_3.tex}
-% \clearpage
-% \input{07_exploitation.tex}   % skipped for now -- to be done later
-\clearpage
+\chapsep
+\input{07_exploitation.tex}
+\chapsep
 \input{08_malware_1.tex}
-\clearpage
+\chapsep
 \input{09_malware_2.tex}
+\chapsep
+\input{10_mobile_platform.tex}
+\chapsep
+\input{11_mobile_apps.tex}
 
+\end{multicols*}
 \end{document}

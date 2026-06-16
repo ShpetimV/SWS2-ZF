@@ -2,8 +2,6 @@
 %  Chapter fragment -- included by main.tex
 %  (not a standalone document; compile main.tex to build the PDF)
 % ============================================================
-\begin{multicols*}{3}
-\raggedcolumns
 
 \sheettitle{11 -- Mobile Apps Security}{SWS2 -- ZHAW / Tellenbach}
 
@@ -177,4 +175,3 @@ Goal: understand internals + \kw{extract hidden info}. Attacker motivation: find
 Mobile-app flaws split in two: \kw{web-like} (secure comm, auth/authz, client-side injection -- fix as in web: TLS+pinning, server-side access control + tokens, prepared statements + whitelisting) and \kw{app-specific} (data storage/leakage, inter-app comm, reverse engineering). \hl{Golden rule: any in-app security measure can be circumvented by a determined attacker} -- offline auth, hardcoded-key encryption, and anti-RE only \kw{slow} attacks. $\Rightarrow$ keep secrets \& access control \kw{server-side}.
 \end{defbox}
 
-\end{multicols*}

@@ -66,4 +66,12 @@
   {\color{zhawblue}\Large\bfseries #1}\\
   {\footnotesize #2}\par}
 
+% ===== Chapter separator (continuous multicol stream) =====
+% Visible divider between chapters; \addvspace collapses at
+% column tops so it never creates blank space.
+\newcommand{\chapsep}{%
+  \par\addvspace{7pt}%
+  \noindent{\color{zhawblue}\rule{\columnwidth}{0.7pt}}%
+  \par\addvspace{5pt}}
+
 \pagestyle{empty}
