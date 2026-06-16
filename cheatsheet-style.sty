@@ -24,8 +24,29 @@
 \definecolor{zhawblue}{RGB}{0,90,158}
 \definecolor{secblue}{RGB}{30,110,180}
 \definecolor{lightgray}{RGB}{240,240,240}
-\definecolor{accent}{RGB}{200,30,30}
+\definecolor{accent}{RGB}{200,30,30}        % reserved for \hl (exam markers)
 \definecolor{tableblue}{RGB}{214,232,247}   % light blue for table rows
+
+% ===== Per-topic theme colors =====
+% Each chapter file picks ONE of these via \settheme{topicNN} at its top.
+% All headers/subheaders/bullets/key terms then take that color, so when
+% printed double-sided you can flip through and spot a topic by its color.
+% (Reds avoided so the \hl exam-marker red always stands out.)
+\definecolor{topic01}{RGB}{0,90,158}    % blue
+\definecolor{topic02}{RGB}{0,140,150}   % teal
+\definecolor{topic03}{RGB}{30,130,60}   % green
+\definecolor{topic04}{RGB}{120,130,20}  % olive
+\definecolor{topic05}{RGB}{200,120,0}   % amber
+\definecolor{topic06}{RGB}{200,80,30}   % burnt orange
+\definecolor{topic07}{RGB}{185,30,120}  % magenta
+\definecolor{topic08}{RGB}{130,45,165}  % purple
+\definecolor{topic09}{RGB}{70,55,175}   % indigo
+\definecolor{topic10}{RGB}{120,75,45}   % brown
+\definecolor{topic11}{RGB}{70,90,110}   % slate
+
+% Current topic color (default = topic01); \settheme switches it.
+\colorlet{chapcol}{topic01}
+\newcommand{\settheme}[1]{\colorlet{chapcol}{#1}}
 
 % ===== Layout tweaks =====
 \setlength{\columnsep}{0.6em}
@@ -42,28 +63,28 @@
 % ===== Section styling (compact blue bar) =====
 \newcommand{\secbar}[1]{%
   \par\smallskip
-  \noindent\colorbox{zhawblue}{\parbox{\dimexpr\columnwidth-2\fboxsep\relax}{\color{white}\bfseries\strut #1}}%
+  \noindent\colorbox{chapcol}{\parbox{\dimexpr\columnwidth-2\fboxsep\relax}{\color{white}\bfseries\strut #1}}%
   \par\smallskip}
 \titleformat{\section}{}{}{0pt}{\secbar}
 \titlespacing{\section}{0pt}{4pt}{2pt}
 
-\titleformat{\subsection}{\normalfont\bfseries\color{secblue}}{}{0pt}{}
+\titleformat{\subsection}{\normalfont\bfseries\color{chapcol}}{}{0pt}{}
 \titlespacing{\subsection}{0pt}{3pt}{1pt}
 
 % ===== Compact lists =====
-\setlist[itemize]{leftmargin=1.1em,topsep=0pt,partopsep=0pt,parsep=0pt,itemsep=0.4pt,label=\textcolor{zhawblue}{\tiny$\blacksquare$}}
-\setlist[itemize,2]{leftmargin=0.9em,label=\textcolor{secblue}{\tiny$\bullet$},itemsep=0.2pt}
+\setlist[itemize]{leftmargin=1.1em,topsep=0pt,partopsep=0pt,parsep=0pt,itemsep=0.4pt,label=\textcolor{chapcol}{\tiny$\blacksquare$}}
+\setlist[itemize,2]{leftmargin=0.9em,label=\textcolor{chapcol}{\tiny$\bullet$},itemsep=0.2pt}
 
 % ===== Helper macros =====
-\newcommand{\kw}[1]{\textbf{\color{zhawblue}#1}}   % key term
+\newcommand{\kw}[1]{\textbf{\color{chapcol}#1}}    % key term (takes topic color)
 \newcommand{\term}[1]{\textit{#1}}                  % example / italic term
-\newcommand{\hl}[1]{\textbf{\color{accent}#1}}      % exam-relevant marker
+\newcommand{\hl}[1]{\textbf{\color{accent}#1}}      % exam-relevant marker (always red)
 
-\newtcolorbox{defbox}{colback=lightgray,colframe=zhawblue,boxrule=0.4pt,arc=2pt,left=2pt,right=2pt,top=1pt,bottom=1pt,boxsep=1pt}
+\newtcolorbox{defbox}{colback=lightgray,colframe=chapcol,boxrule=0.4pt,arc=2pt,left=2pt,right=2pt,top=1pt,bottom=1pt,boxsep=1pt}
 
 % ===== Title helper =====
 \newcommand{\sheettitle}[2]{%
-  {\color{zhawblue}\Large\bfseries #1}\\
+  {\color{chapcol}\Large\bfseries #1}\\
   {\footnotesize #2}\par}
 
 % ===== Chapter separator (continuous multicol stream) =====
@@ -71,7 +92,7 @@
 % column tops so it never creates blank space.
 \newcommand{\chapsep}{%
   \par\addvspace{7pt}%
-  \noindent{\color{zhawblue}\rule{\columnwidth}{0.7pt}}%
+  \noindent{\color{chapcol}\rule{\columnwidth}{0.7pt}}%
   \par\addvspace{5pt}}
 
 \pagestyle{empty}

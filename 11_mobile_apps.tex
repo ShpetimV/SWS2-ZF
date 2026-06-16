@@ -3,6 +3,7 @@
 %  (not a standalone document; compile main.tex to build the PDF)
 % ============================================================
 
+\settheme{topic11}
 \sheettitle{11 -- Mobile Apps Security}{SWS2 -- ZHAW / Tellenbach}
 
 % ==================== INTRO ====================
@@ -169,9 +170,5 @@ Goal: understand internals + \kw{extract hidden info}. Attacker motivation: find
 \item \kw{Jailbreak/root detection}: check for typical files (\term{/Applications/Cydia.app}, \term{/system/app/Superuser.apk}) $\Rightarrow$ raises the bar. \hl{But circumvented} by binary patching or hooking tools (\kw{Liberty Lite}/iOS, \kw{RootCloak}/Android) that fake a "clean" response.
 \end{itemize}
 
-% ==================== SUMMARY ====================
-\section{Summary \hl{(!)}}
-\begin{defbox}
-Mobile-app flaws split in two: \kw{web-like} (secure comm, auth/authz, client-side injection -- fix as in web: TLS+pinning, server-side access control + tokens, prepared statements + whitelisting) and \kw{app-specific} (data storage/leakage, inter-app comm, reverse engineering). \hl{Golden rule: any in-app security measure can be circumvented by a determined attacker} -- offline auth, hardcoded-key encryption, and anti-RE only \kw{slow} attacks. $\Rightarrow$ keep secrets \& access control \kw{server-side}.
-\end{defbox}
+
 
