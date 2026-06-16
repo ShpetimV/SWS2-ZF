@@ -52,7 +52,7 @@ Real-time, near-real-time or batched; today often \kw{scalable cloud} architectu
 
 \subsection{Usage scenarios}
 \begin{itemize}
-\item \kw{SOC}: analysts 24/7, chase alerts.
+\item \kw{SOC (Security Operations Center)}: analysts 24/7, chase alerts.
 \item \kw{Mini-SOC} / "morning after": 1/24, review \& drill down.
 \item \kw{Automated SOC}: configure \& forget, alerts only.
 \item \kw{Compliance reporting}: review weekly/monthly.
@@ -202,7 +202,7 @@ Detecting \& responding to an indicator fast = \kw{denying the adversary its use
 \item \kw{Accuracy} (good for \kw{you}): if it matches, how sure it's really malicious (few false positives).
 \item \kw{Pain} (cost to the \kw{attacker}): how hard/costly to \kw{change it} \& evade you.
 \end{itemize}
-Bottom = trivial for attacker to change, top = must reinvent. \textit{Ex: a \kw{hash} = high accuracy (matches exactly one file) but \hl{trivial pain} -- attacker flips 1 bit / recompiles $\to$ new hash $\to$ your block is useless $\Rightarrow$ whack-a-mole. A \kw{TTP} = high pain (attacker must change how they operate) but lower accuracy (legit admins also use e.g. PowerShell $\to$ false positives).}
+Bottom = trivial for attacker to change, top = must reinvent. \textit{Ex: a \kw{hash} = high accuracy (matches exactly one file) but \hl{trivial pain} -- attacker flips 1 bit / recompiles $\to$ new hash $\to$ your block is useless $\Rightarrow$ whack-a-mole. A \kw{Tactic, Technique and Procedure (TTP)} = high pain (attacker must change how they operate) but lower accuracy (legit admins also use e.g. PowerShell $\to$ false positives).}
 
 \subsection{Levels (low $\to$ high pain)}
 \begin{itemize}
